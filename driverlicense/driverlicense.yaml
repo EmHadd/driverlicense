@@ -1,2 +1,5 @@
 DEFAULT:
   mongo_database: driverlicense
+
+collection:
+  data: !connect mongodb://xlsx

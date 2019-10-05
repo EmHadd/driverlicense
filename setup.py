@@ -9,6 +9,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "core4 @ git+https://github.com/plan-net/core4.git"
+        "core4 @ git+https://github.com/plan-net/core4.git",
+        "xlrd"
     ]
 )
