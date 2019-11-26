@@ -4,7 +4,22 @@ import pandas as pd
 from io import BytesIO
 import concurrent.futures
 from core4.queue.helper.functool import enqueue
+import datetime
 
+MONAT = {
+    "Januar": "01",
+    "Februar": "02",
+    "März": "03",
+    "April": "04",
+    "Mai": "05",
+    "Juni": "06",
+    "Juli": "07",
+    "August": "08",
+    "September": "09",
+    "Oktober": "10",
+    "November": "11",
+    "Dezember": "12"
+}
 
 class ProcessFiles(CoreJob):
     author = "mra"
@@ -106,7 +121,7 @@ class ProcessFiles(CoreJob):
         cols = list(df.iloc[ln - 1])
         cols[0] = "Titel"
         d.columns = ["" if pd.isnull(c)
-                     else c.replace("\n", " ").replace(".", "") for c in cols]
+                     else c.replace("\n", " ").replace(".", "").replace("\s+"," ") for c in cols]
         if "" in d.columns:
             d.drop([""], axis=1, inplace=True)
         #  add the extra variables to the dataframe
@@ -115,6 +130,18 @@ class ProcessFiles(CoreJob):
         d["Zeitraum"] = zeitraum
         d["Vorfilter"] = vorfilter
         d["Zielgruppe"] = zielgruppe
+        d.columns = d.columns.str.replace('\s+', ' ')
+
+        monat = d.Zeitraum.apply(
+            lambda s: s.replace("Letzter Monat (", "").replace(")",
+                                                               "").split())
+        d["Monat"] = [
+            datetime.datetime.strptime("01." + MONAT[m[0]] + "." + m[1],
+                                       "%d.%m.%Y") for m in monat]
+        d["val"] = d["Kontakte Mio"].apply(pd.to_numeric,
+                                                     errors='coerce')
+        d['Date'] = d.Monat.apply(lambda x: x.date().isoformat())
+
         doc = d.to_dict("rec")
         n = 0
         # delete any previous version of the file in the database

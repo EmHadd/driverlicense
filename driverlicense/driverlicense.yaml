@@ -3,3 +3,4 @@ DEFAULT:
 
 collection:
   data: !connect mongodb://xlsx
+  temp: !connect mongodb://temp

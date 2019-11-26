@@ -55,7 +55,7 @@ class ScrapeFacts(CoreJob):
                 download += 1
         self.logger.info("successfully retrieved [%d] of [%d] files",
                          download, len(xls))
-
+        enqueue(ProcessFiles, concurrent=True)
 
 if __name__ == '__main__':
     from core4.queue.helper.functool import execute
