@@ -15,6 +15,7 @@ setup(
         "matplotlib",
         "feedparser",
         "spacy",
+        "rpy2==3.0.5",
         "praw"
     ]
 )
