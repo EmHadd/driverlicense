@@ -43,3 +43,6 @@ target/
 .venv
 local.yaml
 .repos
+
+# R packages
+**/rjobs/Rlib/lib
