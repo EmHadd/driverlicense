@@ -14,6 +14,7 @@ setup(
         "xlrd",
         "matplotlib",
         "feedparser",
-        "spacy"
+        "spacy",
+        "praw"
     ]
 )

@@ -4,3 +4,10 @@ DEFAULT:
 collection:
   data: !connect mongodb://xlsx
   temp: !connect mongodb://temp
+reddit:
+    job:
+      RedditCollector:
+        reddit_coll: !connect mongodb://images
+        client_id: ~
+        secret: ~
+        schedule : "*/45 * * * *"
