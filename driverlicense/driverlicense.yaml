@@ -3,7 +3,7 @@ DEFAULT:
 
 collection:
   data: !connect mongodb://xlsx
-
+  temp: !connect mongodb://temp
 reddit:
     job:
       RedditCollector:
@@ -11,4 +11,3 @@ reddit:
         client_id: ~
         secret: ~
         schedule : "*/45 * * * *"
-
