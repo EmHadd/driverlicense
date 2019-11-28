@@ -10,6 +10,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "core4 @ git+https://github.com/plan-net/core4.git",
-        "xlrd"
+        "xlrd",
+        "praw"
     ]
 )
