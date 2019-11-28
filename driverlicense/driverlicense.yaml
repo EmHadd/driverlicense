@@ -8,5 +8,10 @@ collection:
 url: mongodb://core:654321@localhost:27017/admin
 coll_name: xlsx
 db: driverlicense
-
-
+reddit:
+    job:
+      RedditCollector:
+        reddit_coll: !connect mongodb://images
+        client_id: ~
+        secret: ~
+        schedule : "*/45 * * * *"
