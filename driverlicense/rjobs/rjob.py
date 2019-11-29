@@ -6,9 +6,6 @@ import os
 
 import rpy2.robjects.packages as rpackages
 
-
-from rpy2.robjects.vectors import StrVector
-
 download_script = __file__
 download_dir = os.path.dirname(__file__)
 LIB_LOC = os.path.join(download_dir, 'R_lib','lib')
@@ -23,17 +20,15 @@ class RJob(CoreJob):
         df = pd.DataFrame({'x': [1,2,3,4,5],
                            'y': [2,1,3,5,4]})
         M = R.lm('y~x', data=df)
-        #print(R.summary(M))
-        R.plot(df.y)
         self.logger.info(R.summary(M).rx('coefficients'))
         R.gc()
         res = self.get_func()
         print(res.shape)
 
     def get_func(self):
-        url = self.config.driverlicense.url
-        db = self.config.driverlicense.db
-        collection = self.config.driverlicense.coll_name
+        url = self.config.driverlicense['mongo_url']
+        db = 'driverlisence'
+        collection = 'xlsx'
         r = ro.r
         rpackages.importr('mongolite',lib_loc= LIB_LOC)
         rpackages.importr('openssl', lib_loc=LIB_LOC)

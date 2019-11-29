@@ -5,8 +5,5 @@ collection:
   data: !connect mongodb://xlsx
   temp: !connect mongodb://temp
 
-url: mongodb://core:654321@localhost:27017/admin
-coll_name: xlsx
-db: driverlicense
 
 

@@ -14,7 +14,7 @@ lib_loc = os.path.join(download_dir, 'lib')
 
 # make sure you have this on linux
 # sudo apt-get install libssl-dev libsasl2-dev
-# sudo apt-get install libcurl4-openssl-dev "
+# sudo apt-get install libcurl4-openssl-dev
 
 
 # needed: openssl, swirl

@@ -3,9 +3,6 @@ import pandas as pd
 import numpy as np
 
 
-url = "https://www.agof.de/service-downloads/downloadcenter/download-daily-digital-facts/"
-
-
 class ExtractFacts(CoreJob):
     author = "mra"
     schedule = "*/30 * * * * "
@@ -36,20 +33,21 @@ class ExtractFacts(CoreJob):
         # first graph
         if start and end:
             df = df[(df.Date >= start & df.Date <= end)]
+        df['Kontakte Mio'].replace("--", None, inplace=True)
         df = df.replace(np.nan, 0)
-        g = df.groupby(["Date"]).val.sum()
+        g = df.groupby(["Date"])['Kontakte Mio'].agg('sum')
         results['firstGraph'] = g.to_dict()
 
         # second graph
         df_new = df[df.Medientyp != 0]
-        g1 = df_new.groupby(["Medientyp"]).val.sum()
+        g1 = df_new.groupby(["Medientyp"])['Kontakte Mio'].agg('sum')
         results['secondGraph'] = g1.to_dict()
 
         # third graph
         df_new = df[df.Medientyp != 0]
         # Monthly contacts for each media group
-        g2 = df_new.groupby(["Date", "Medientyp"]).val.sum().unstack()
-        results['thirdGraph'] = g2.to_dict()
+        g2 = df_new.groupby(["Date", "Medientyp"])['Kontakte Mio'].agg('sum')
+        results['thirdGraph'] = g2.reset_index().to_dict('rec')
         self.set_source(str(self._id))
         self.temp.insert_one(results)
 
