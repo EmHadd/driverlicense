@@ -52,7 +52,8 @@ class ScrapeFacts(CoreJob):
                 rv = requests.get(link)
                 if not test:
                     self.gfs.put(rv.content, filename=link)
-                download += 1
+            download += 1
+            self.progress(download / len(xls))
         self.logger.info("successfully retrieved [%d] of [%d] files",
                          download, len(xls))
         enqueue(ProcessFiles, concurrent=True)
