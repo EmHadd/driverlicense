@@ -4,7 +4,7 @@ import driverlicense
 
 setup(
     name="driverlicense",
-    author ="eha",
+    author="eha",
     version=driverlicense.__version__,
     packages=find_packages(exclude=['docs*', 'tests*']),
     include_package_data=True,
