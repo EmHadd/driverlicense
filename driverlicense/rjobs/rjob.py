@@ -34,7 +34,7 @@ class RJob(CoreJob):
         db = 'driverlicense'
         collection = 'xlsx'
         r.source('script1.R')
-        r.debug(r.func1(collection, db, url))
+        # r.debug("func1")
         res = r.func1(collection, db, url)
         self.logger.info('Dataframe size is %s', res.shape)
         return res
