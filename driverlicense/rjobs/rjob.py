@@ -19,7 +19,7 @@ class RJob(CoreJob):
         self.data = self.config.driverlicense.collection.data
         r_session = get_rsession()
         self.func1(r_session)
-        self.logger.info('imported and executed R func1')
+        #self.logger.info('imported and executed R func1')
         # self.func2(r_session)
         # self.logger.info('imported and executed R func2')
 
@@ -36,7 +36,7 @@ class RJob(CoreJob):
         r.source('script1.R')
         # r.debug("func1")
         res = r.func1(collection, db, url)
-        self.logger.info('Dataframe size is %s', res.shape)
+        #self.logger.info('Dataframe size is %s', res.shape)
         return res
 
     def func2(self, r):
