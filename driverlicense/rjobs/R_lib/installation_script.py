@@ -17,7 +17,7 @@ lib_loc = os.path.join(download_dir, 'lib')
 # sudo apt-get install libcurl4-openssl-dev
 
 
-# needed: openssl, swirl
+# needed: openssl, swirl, mongolite
 def install_package(lib_loc, package_name):
     """
 
@@ -34,6 +34,6 @@ def install_package(lib_loc, package_name):
     print(base._libPaths())
 
 if __name__ == '__main__':
-    package_name = 'mongolite'
+    package_name = 'logging'
     install_package(lib_loc, package_name)
     print(lib_loc)
