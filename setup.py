@@ -4,13 +4,13 @@ import driverlicense
 
 setup(
     name="driverlicense",
-    author ="eha",
+    author="eha",
     version=driverlicense.__version__,
     packages=find_packages(exclude=['docs*', 'tests*']),
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "core4 @ git+https://github.com/plan-net/core4.git",
+        "core4@git+https://github.com/plan-net/core4.git@develop",
         "xlrd",
         "matplotlib",
         "feedparser",
