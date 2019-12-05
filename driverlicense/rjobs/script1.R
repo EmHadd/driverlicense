@@ -1,10 +1,11 @@
 
 library(mongolite)
+library(logging)
 
 func1 <- function(collection, db, url){
     # Connection to mongodb
     col <- mongo(collection , db, url)
-    #loginfo('connected to database')
+    loginfo('connected to database')
     # documents within collection are transformed into R dataframe
     df <- col$find()
     df$`Kontakte Mio`[df$`Kontakte Mio` == "--"] <- NA
@@ -27,7 +28,7 @@ func1 <- function(collection, db, url){
     thirdgraph <- aggregate(df_new$`Kontakte Mio`, by = list(df_new$Date, df_new$Medientyp), FUN = "sum")
     colnames(thirdgraph) <- c("Date", "Medientyp", "Kontakte")
 
-    #loginfo('dataframe name is %s', 'dataframe')
+    loginfo('dataframe name is %s', 'dataframe')
     #ins <- col$insert(df)
     #loginfo('number of inserted records %d', ins$nInserted)
     return(list(firstgraph, secondgraph, thirdgraph))

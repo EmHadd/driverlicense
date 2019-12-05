@@ -21,7 +21,7 @@ class RJob3(CoreRJob):
         db = self.config.driverlicense.collection.data.database
         collection = self.config.driverlicense.collection.data.name
         r.source('script1.R')
-        #r.debug("func1")
+        # r.debug("func1")
         res = r.func1(collection, db, url)
         results = {}
         names = ['firstGraph', 'secondGraph', 'thirdGraph']
