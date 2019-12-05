@@ -16,6 +16,7 @@ setup(
         "feedparser",
         "spacy",
         "rpy2==3.0.5",
-        "praw"
+        "praw",
+        "feather-format==0.4.0"
     ]
 )

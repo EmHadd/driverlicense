@@ -6,6 +6,7 @@ class RJob3(CoreRJob):
 
     def execute(self):
         self.data = self.config.driverlicense.collection.data
+        self.temp = self.config.driverlicense.collection.temp
         r_session = self.get_rsession()
         self.func1(r_session)
 
@@ -20,10 +21,14 @@ class RJob3(CoreRJob):
         db = self.config.driverlicense.collection.data.database
         collection = self.config.driverlicense.collection.data.name
         r.source('script1.R')
-        # r.debug("func1")
+        #r.debug("func1")
         res = r.func1(collection, db, url)
-        self.logger.info('Dataframe size is %s', res.shape)
-        return res
+        results = {}
+        names = ['firstGraph', 'secondGraph', 'thirdGraph']
+        for i, df in enumerate(res):
+            results[names[i]] = df.to_dict('rec')
+        self.set_source(str(self._id))
+        self.temp.insert_one(results)
 
 
 if __name__ == '__main__':
