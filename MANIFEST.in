@@ -1,3 +1,4 @@
 # specify any non Python files (not *.py) with the following instruction
 # recursive-include driverlicense/ *
 include driverlicense/driverlicense.yaml
+include driverlicense/test.html
