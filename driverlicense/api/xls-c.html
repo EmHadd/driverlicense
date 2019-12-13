@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>XLS data</h1>
+
+<form>
+    <textarea cols="100" name="query" rows="10">{{ query }}</textarea>
+    <input type="submit">
+</form>
+
+<hr>
+
+{% raw df.to_html() %}
+
+</body>
+</html>

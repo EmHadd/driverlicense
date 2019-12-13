@@ -163,4 +163,4 @@ class ProcessFiles(CoreJob):
 
 if __name__ == '__main__':
     from core4.queue.helper.functool import execute
-    execute(ProcessFiles, test=False)
+    execute(ProcessFiles, test=False, threaded=True)
