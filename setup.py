@@ -17,6 +17,7 @@ setup(
         "spacy",
         "rpy2==3.0.5",
         "praw",
-        "feather-format==0.4.0"
+        "feather-format==0.4.0",
+        "openpyxl"
     ]
 )
