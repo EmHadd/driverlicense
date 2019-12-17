@@ -2,13 +2,13 @@ from core4.api.v1.application import CoreApiContainer
 from driverlicense.api.agof import AgofHandler
 
 
-
 class MyServer(CoreApiContainer):
     root = "/driverlicense/api/"
     rules = [
         ("/update", AgofHandler),
-        ("/analyse", AgofHandler),
         ("/download", AgofHandler),
+        ("/analyse", AgofHandler),
+        ("/analyse/(.*)", AgofHandler),
         ("/html", AgofHandler)
     ]
 
