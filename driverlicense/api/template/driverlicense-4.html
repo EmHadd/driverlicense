@@ -194,7 +194,6 @@
         methods: {
           //methoden, die aus dem html aufgerufen werden
           createChart(data, type) {
-            console.log(data);
             const chartTpl = JSON.parse(JSON.stringify(chartOptions));
             if (type === "columnDt1") {
               chartTpl.legend.enabled = true;
