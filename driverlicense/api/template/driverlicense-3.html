@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Agof Widget</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://bi.plan-net.com/cdn/assets/css/vuetify_2.0.css"
+      rel="stylesheet"
+    />
+    <style>
+      .custom-loader {
+        animation: loader 1s infinite;
+        display: flex;
+      }
+      @keyframes loader {
+        from {
+          transform: rotate(0);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <v-app>
+        <v-container style="max-width:1150px">
+          <v-card>
+            <v-card-title class="headline">AGOF Widget </v-card-title>
+            <v-card-content>
+              <v-row align="start" justify="center">
+                <v-col cols="6">
+                  <pre>[[json]]</pre>
+                </v-col>
+                <v-col cols="6">
+                  <pre>[[json2]]</pre>
+                </v-col>
+              </v-row>
+              <v-card-text>
+                <v-row align="start" justify="center">
+                  <v-col cols="12">
+                    <highcharts
+                      v-if="chart1options"
+                      :options="chart1options"
+                    ></highcharts>
+                  </v-col>
+                  <v-col cols="12">
+                    <highcharts
+                      v-if="chart2options"
+                      :options="chart2options"
+                    ></highcharts>
+                  </v-col>
+                  <v-col cols="12">
+                    <highcharts
+                      v-if="chart3options"
+                      :options="chart3options"
+                    ></highcharts>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card-content>
+            <v-card-actions class="pr-3 pb-3">
+              <v-btn
+                :loading="loading"
+                :disabled="loading || loading2"
+                color="accent"
+                @click="updateData()"
+              >
+                Sammle Daten
+                <template v-slot:loader>
+                  <span class="custom-loader">
+                    <v-icon light>cached</v-icon>
+                  </span>
+                </template>
+              </v-btn>
+              <v-btn
+                :loading="loading2"
+                :disabled="loading || loading2"
+                color="accent"
+                @click="analyse()"
+              >
+                Analyse
+                <template v-slot:loader>
+                  <span class="custom-loader">
+                    <v-icon light>cached</v-icon>
+                  </span>
+                </template>
+              </v-btn>
+
+              <v-spacer></v-spacer>
+              <v-btn color="primary" disabled>
+                Download
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-container>
+      </v-app>
+    </div>
+    <script src="https://bi.plan-net.com/cdn/assets/js/vue-assets_2.0.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/7.2.0/highcharts.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/highcharts-vue@1.3.5/dist/highcharts-vue.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ static_url('template/sse.js') }}"
+    ></script>
+    <script>
+      const chartOptions = {
+        credits: false,
+        lang: {
+          decimalPoint: ",",
+          thousandsSep: "."
+        },
+        colors: [
+          "#1d4161",
+          "#aaca7c",
+          "#2b908f",
+          "#90ee7e",
+          "#f45b5b",
+          "#7798BF",
+          "#aaeeee",
+          "#ff0066",
+          "#eeaaee",
+          "#55BF3B",
+          "#DF5353",
+          "#7798BF",
+          "#aaeeee"
+        ],
+        chart: {
+          type: "column",
+          height: 320
+        },
+        title: {
+          text: ""
+        },
+        subtitle: {
+          text: null
+        },
+        xAxis: {
+          title: {
+            text: null
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        yAxis: {
+          title: {
+            text: null
+          }
+        },
+        plotOptions: {},
+        series: []
+      };
+      Highcharts.setOptions({
+        global: {
+          useUTC: false
+        }
+      });
+      Vue.use(HighchartsVue.default);
+      var app = new Vue({
+        delimiters: ["[[", "]]"], // default ist { { } }
+        el: "#app", // mountpoint der vue applikation, es kann mehrere geben
+        // konfiguration unsere vue instanz, farben und einstellungen aus der vus_assets_2.0.js
+        vuetify: new Vuetify({
+          icons: {
+            iconfont: "md"
+          },
+          theme: window.VUETIFY_THEME
+        }),
+        data: {
+          // variablen innerhalb ves html markups
+          loading: false,
+          loading2: false,
+          latestAnalyseId: null,
+          json: null,
+          json2: null,
+          chart1options: null,
+          chart2options: null,
+          chart3options: null
+        },
+        methods: {
+          //methoden, die aus dem html aufgerufen werden
+          createChart(data, type) {
+            console.log(data);
+            const chartTpl = JSON.parse(JSON.stringify(chartOptions));
+            if (type === "columnDt1") {
+              chartTpl.legend.enabled = true;
+              chartTpl.xAxis.type = "datetime";
+              chartTpl.xAxis.tickInterval = 1000 * 3600 * 24 * 30; // 1 month
+              chartTpl.title.text =
+                "Number of monthly contacts per media category";
+              const uniqueValues = [...new Set(data.map(val => val.Medientyp))];
+              chartTpl.series = uniqueValues.map(name => {
+                let d = data
+                  .filter(val => val.Medientyp === name)
+                  .map(val => {
+                    return {
+                      x: new Date(val.Date).getTime(),
+                      y: val["Kontakte Mio"]
+                    };
+                  });
+                d = d.sort(function(a, b) {
+                  return a.x == b.x ? 0 : +(a.x > b.x) || -1;
+                });
+
+                return {
+                  name,
+                  data: d
+                };
+              });
+              this.json2 = chartTpl.series;
+              //this.chart1options = chartTpl;
+            } else if (type === "columnDt2") {
+              let series = [
+                {
+                  data: Object.keys(data).map(date => {
+                    return {
+                      x: new Date(date).getTime(),
+                      y: data[date]
+                    };
+                  })
+                }
+              ];
+              series[0].data = series[0].data.sort(function(a, b) {
+                return a.x == b.x ? 0 : +(a.x > b.x) || -1;
+              });
+
+              chartTpl.series = series;
+              chartTpl.xAxis.type = "datetime";
+              chartTpl.xAxis.tickInterval = 1000 * 3600 * 24 * 30; // 1 month
+              chartTpl.title.text = "Number of contacts per month";
+              //this.chart3options = chartTpl;
+            } else if (type === "basicColumn") {
+              const categories = Object.keys(data);
+              const colors = ["#1d4161", "#24738c", "#5db7a2"];
+              const series = categories.map((name, index) => {
+                return {
+                  name: name,
+                  y: data[name],
+                  color: colors[index]
+                };
+              });
+              chartTpl.series = [{ data: series }];
+              chartTpl.xAxis.categories = categories;
+              chartTpl.title.text = "Number of contacts per media category";
+              //this.chart2options = chartTpl;
+            }
+          },
+          analyseById(path) {
+            axios
+              .get(path)
+              .then(
+                function(response) {
+                  this.json = response.data.data;
+                  this.createChart(response.data.data[0], "columnDt2");
+                  this.createChart(response.data.data[1], "basicColumn");
+                  this.createChart(response.data.data[2], "columnDt1");
+               
+                }.bind(this)
+              )
+              .catch(function(error) {})
+              .finally(function() {});
+          },
+          analyse() {
+            let path = "/driverlicense/api/analyse";
+            const sse = new SSE(path, {
+              headers: { "Content-Type": "text/plain" }
+            });
+            this.loading2 = true;
+            sse.addEventListener(
+              "log",
+              async event => {
+                const payload = JSON.parse(event.data);
+                this.latestAnalyseId = payload.identifier;
+              },
+              false
+            );
+            sse.addEventListener(
+              "error",
+              async event => {
+                this.loading2 = false;
+                sse.removeEventListener("log");
+                sse.removeEventListener("error");
+                sse.removeEventListener("close");
+              },
+              false
+            );
+            sse.addEventListener(
+              "close",
+              async event => {
+                this.loading2 = false;
+                sse.removeEventListener("log");
+                sse.removeEventListener("error");
+                sse.removeEventListener("close");
+
+                this.analyseById(path + "/" + this.latestAnalyseId);
+              },
+              false
+            );
+            sse.stream(true);
+          },
+          updateData() {
+            const sse = new SSE("/driverlicense/api/update", {
+              headers: { "Content-Type": "text/plain" },
+              payload: "POST"
+            });
+            this.loading = true;
+            sse.addEventListener(
+              "error",
+              async event => {
+                this.loading = false;
+                sse.removeEventListener("error");
+                sse.removeEventListener("close");
+              },
+              false
+            );
+            sse.addEventListener(
+              "close",
+              async event => {
+                this.loading = false;
+                sse.removeEventListener("error");
+                sse.removeEventListener("close");
+              },
+              false
+            );
+            sse.stream(true);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

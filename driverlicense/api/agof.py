@@ -7,6 +7,8 @@ import pandas as pd
 from io import BytesIO
 from bson.objectid import ObjectId
 
+from core4.api.v1.request.main import CoreRequestHandler
+
 
 class AgofHandler(JobStream):
     """
@@ -329,8 +331,6 @@ class AgofHandler(JobStream):
             return await self.download_data(start, end)
         elif "analyse" in self.request.path:
             return await self.analyse_data(start, end)
-        else:
-            return self.render("template/driverlicense.html")
 
     async def download_data(self, start, end):
         self.target = self.config.driverlicense.collection.data
@@ -379,3 +379,11 @@ class AgofHandler(JobStream):
 
     def put(self):
         pass
+
+class AgofWidgetHandler(CoreRequestHandler):
+    author = "mmr"
+    title = "Agof Widget"
+    tag = ["Agof", "analyse", "update"]
+
+    async def get(self):
+        return self.render("template/driverlicense-4.html")
