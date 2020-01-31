@@ -5,7 +5,7 @@ from datetime import datetime
 
 class ExtractFacts(CoreJob):
     author = "mra"
-    schedule = "*/30 * * * * "
+    # schedule = "*/30 * * * * "
 
     def execute(self, start=None, end=None, *args, **kwargs):
         """

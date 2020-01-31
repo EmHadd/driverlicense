@@ -10,7 +10,7 @@ url = "https://www.agof.de/service-downloads/downloadcenter/download-daily-digit
 
 class ScrapeFacts(CoreJob):
     author = "mra"
-    schedule = "*/30 * * * * "
+    #schedule = "*/30 * * * * "
 
     def execute(self, test=False, *args, **kwargs):
         """

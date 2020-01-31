@@ -12,3 +12,7 @@ reddit:
         client_id: ~
         secret: ~
         schedule : "*/45 * * * *"
+
+api:
+  admin_password: hans
+
